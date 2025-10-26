@@ -1,10 +1,8 @@
 import argparse
 import logging
 import os
-import shutil
 
-from depix import DepixHelpFormatter
-from LoadedImage import LoadedImage
+from depixlib.LoadedImage import LoadedImage
 
 
 def check_file(s: str) -> str:
@@ -18,16 +16,7 @@ def parse_args() -> argparse.Namespace:
     logging.basicConfig(level=logging.INFO)
 
     parser = argparse.ArgumentParser(
-        description="This command generates pixelized image from a given image.",
-        formatter_class=(
-            lambda prog: DepixHelpFormatter(
-                prog,
-                **{
-                    "width": shutil.get_terminal_size(fallback=(120, 50)).columns,
-                    "max_help_position": 40,
-                },
-            )
-        ),
+        description="This command generates pixelized image from a given image."
     )
     parser.add_argument(
         "-i",

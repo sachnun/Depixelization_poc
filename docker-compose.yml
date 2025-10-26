@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  depix:
+    build: .
+    image: depix:latest
+    volumes:
+      # Mount current directory to access images
+      - ./images:/app/images
+      # Mount input/output directories for easy file access
+      - ./input:/app/input
+      - ./output:/app/output
+    command:
+      - depix
+      - -p
+      - images/testimages/testimage3_pixels.png
+      - -s
+      - images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png
+      - -o
+      - output/result.png
+
+  # Service for running tool_show_boxes.py
+  show-boxes:
+    build: .
+    image: depix:latest
+    volumes:
+      - ./images:/app/images
+      - ./input:/app/input
+      - ./output:/app/output
+    command:
+      - show-boxes
+      - -p
+      - images/testimages/testimage3_pixels.png
+      - -s
+      - images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png
+    profiles:
+      - tools
+
+  # Service for generating pixelated images
+  gen-pixelated:
+    build: .
+    image: depix:latest
+    volumes:
+      - ./images:/app/images
+      - ./input:/app/input
+      - ./output:/app/output
+    command:
+      - gen-pixelated
+      - -i
+      - input/source.png
+      - -o
+      - output/pixelated.png
+    profiles:
+      - tools

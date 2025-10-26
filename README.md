@@ -17,7 +17,35 @@ In [this article](https://www.spipm.nl/2030.html) I cover background information
 
 ## Installation
 
-* Install the dependencies
+### Option 1: Docker (Recommended)
+
+The easiest way to run Depix is using Docker:
+
+```sh
+# Build the Docker image
+docker build -t depix .
+
+# Run with docker (example)
+docker run --rm -v $(pwd)/images:/app/images -v $(pwd)/output:/app/output depix \
+    -p images/testimages/testimage3_pixels.png \
+    -s images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png \
+    -o output/result.png
+```
+
+Or use docker-compose for simpler usage:
+
+```sh
+# Run the default example
+docker-compose up
+
+# Run diagnostic tools
+docker-compose run --rm show-boxes
+docker-compose run --rm gen-pixelated
+```
+
+### Option 2: Local Python
+
+* Install the dependencies (Pillow, numpy)
 * Run Depix:
 
 ```sh
@@ -28,6 +56,52 @@ python3 depix.py \
 ```
 
 ## Example usage
+
+### With Docker
+
+* Depixelize example image created with Notepad and pixelized with Greenshot:
+
+```sh
+docker run --rm -v $(pwd)/images:/app/images -v $(pwd)/output:/app/output depix \
+    -p images/testimages/testimage3_pixels.png \
+    -s images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png \
+    -o output/result.png
+```
+
+* Depixelize example image created with Sublime and pixelized with Gimp (linear sRGB):
+
+```sh
+docker run --rm -v $(pwd)/images:/app/images -v $(pwd)/output:/app/output depix \
+    -p images/testimages/sublime_screenshot_pixels_gimp.png \
+    -s images/searchimages/debruin_sublime_Linux_small.png \
+    --backgroundcolor 40,41,35 \
+    --averagetype linear \
+    -o output/result.png
+```
+
+* View box detection:
+
+```sh
+docker run --rm -v $(pwd)/images:/app/images depix show-boxes \
+    -p images/testimages/testimage3_pixels.png \
+    -s images/searchimages/debruinseq_notepad_Windows10_closeAndSpaced.png
+```
+
+Or use docker-compose:
+
+```sh
+docker-compose run --rm show-boxes
+```
+
+* Generate pixelated image:
+
+```sh
+# First, place your source image in the input/ directory
+docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output depix \
+    gen-pixelated -i input/source.png -o output/pixelated.png
+```
+
+### With Local Python
 
 * Depixelize example image created with Notepad and pixelized with Greenshot. Greenshot averages by averaging the gamma-encoded 0-255 values, which is Depix's default mode.
 
